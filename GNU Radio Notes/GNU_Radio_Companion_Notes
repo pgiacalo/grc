@@ -1,0 +1,71 @@
+GNU Radio Companion, GRC (from radioconda) notes
+
+GRC is a graphical interface/front end to GNU Radio
+	- It uses graphical elements to define a flow graph
+	- Its output is an executable python program
+
+gnuradio-companion installed on my MacBook Pro Jan 31, 2024 using radioconda
+	/Users/phil/radioconda/bin/gnuradio-companion
+
+	Installed on my Macbook Pro (16 inch 2019)
+		Installer is found here:
+			https://github.com/ryanvolz/radioconda
+			Version installed: 
+				macOS	x86_64 (Intel)	Command-line	radioconda-MacOSX-x86_64.sh
+
+I also needed to install xterm, in order to run/execute gnu radio companion projects. 
+		brew install xterm
+
+
+Launch gnuradio-companion from the command line, as follows
+	> gnuradio 			(alias to gnuradio-companion)
+	--- OR ---
+	> gnuradio-companion
+
+
+Notes on using gnuradio-companion
+	Search for "osmocom" to find modules compatible with HackRF
+	Search for "range" to find GUI components for interactive inputs
+	Search for "GUI" to find various GUI components
+	DOUBLE CLICK any item listed on the right side to move it into the working area
+
+Example video using HackRF
+	https://www.youtube.com/watch?v=2Brjd78c6gU
+
+--------------------------------------------------------------------------------------
+
+GRC WX GUI blocks are deprecated in GRC. Here are the QT GUI block replacements:
+
+OLD: WX GUI block			NEW: QT GUI block EQUIVALENT
+-----------------			----------------------------
+WX GUI FFT Sink				QT GUI Frequency Sink
+WX GUI Slider				QT GUI Range
+
+
+--------------------------------------------------------------------------------------
+HackRF CLI Tools Installed (on both MacBook Pro laptops)
+(CLI tools installed using "brew install hackrf")
+--------------------------
+hackrf_info
+hackrf_clock
+hackrf_cpldjtag
+hackrf_debug
+hackrf_operacake
+hackrf_spiflash
+hackrf_sweep
+hackrf_transfer
+
+EXAMPLE:
+~ » hackrf_info                                                                                                                                 
+	hackrf_info version: 2023.01.1
+	libhackrf version: 2023.01.1 (0.8)
+	Found HackRF
+	Index: 0
+	Serial number: 0000000000000000625863dc28543a8b
+	Board ID Number: 4 (HackRF One)
+	Firmware Version: v1.9.1 (API:1.08)
+	Part ID Number: 0xa000cb3c 0x00584778
+	Hardware Revision: r9
+	Hardware does not appear to have been manufactured by Great Scott Gadgets.
+	Hardware supported by installed firmware:
+	    HackRF One
