@@ -42,7 +42,7 @@ blocks:
     min_len: '200'
     orient: QtCore.Qt.Horizontal
     rangeType: float
-    start: 50e6
+    start: 1e6
     step: 10e6
     stop: 800e6
     value: 50e6

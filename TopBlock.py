@@ -72,7 +72,7 @@ class TopBlock(gr.top_block, Qt.QWidget):
         self._rf_gain_range = qtgui.Range(0, 50, 0.1, 25, 200)
         self._rf_gain_win = qtgui.RangeWidget(self._rf_gain_range, self.set_rf_gain, "Radio Gain", "counter_slider", float, QtCore.Qt.Horizontal)
         self.top_layout.addWidget(self._rf_gain_win)
-        self._frequency_range = qtgui.Range(50e6, 800e6, 10e6, 50e6, 200)
+        self._frequency_range = qtgui.Range(1e6, 800e6, 10e6, 50e6, 200)
         self._frequency_win = qtgui.RangeWidget(self._frequency_range, self.set_frequency, "Frequency", "counter_slider", float, QtCore.Qt.Horizontal)
         self.top_layout.addWidget(self._frequency_win)
         self.osmosdr_sink_0 = osmosdr.sink(
