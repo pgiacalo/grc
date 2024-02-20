@@ -12,7 +12,7 @@ options:
     gen_linking: dynamic
     generate_options: qt_gui
     hier_block_src_path: '.:'
-    id: AM_Modulation
+    id: AM_Modulator
     max_nouts: '0'
     output_language: python
     placement: (0,0)
@@ -23,7 +23,7 @@ options:
     run_options: prompt
     sizing_mode: fixed
     thread_safe_setters: ''
-    title: AM Modulation
+    title: AM Transmitter
     window_size: (1000,1000)
   states:
     bus_sink: false
@@ -39,7 +39,7 @@ blocks:
   parameters:
     comment: ''
     gui_hint: tabs@1:2, 1
-    label: ''
+    label: IF Gain
     min_len: '200'
     orient: QtCore.Qt.Horizontal
     rangeType: float
@@ -59,7 +59,7 @@ blocks:
   id: variable_qtgui_range
   parameters:
     comment: ''
-    gui_hint: tabs@0:1, 1
+    gui_hint: tabs@0:0, 1,1,1
     label: Microphone Gain
     min_len: '200'
     orient: QtCore.Qt.Horizontal
@@ -67,13 +67,13 @@ blocks:
     start: '0'
     step: '1'
     stop: '10'
-    value: '1'
-    widget: eng
+    value: '5'
+    widget: counter_slider
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [320, 24.0]
+    coordinate: [312, 12.0]
     rotation: 0
     state: enabled
 - name: rf_gain
@@ -235,7 +235,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    comment: ''
+    comment: Local Microphone
     device_name: ''
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -739,6 +739,21 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [928, 356.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_grbackground_0
+  id: qtgui_grbackground
+  parameters:
+    alias: ''
+    alignment: center
+    comment: ''
+    file: ''
+    relBackgroundColor: default
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [648, 32.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0

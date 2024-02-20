@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: GPL-3.0
 #
 # GNU Radio Python Flow Graph
-# Title: AM Modulation
+# Title: AM Transmitter
 # GNU Radio version: 3.10.9.2
 
 from PyQt5 import Qt
@@ -31,12 +31,12 @@ import sip
 
 
 
-class AM_Modulation(gr.top_block, Qt.QWidget):
+class AM_Modulator(gr.top_block, Qt.QWidget):
 
     def __init__(self):
-        gr.top_block.__init__(self, "AM Modulation", catch_exceptions=True)
+        gr.top_block.__init__(self, "AM Transmitter", catch_exceptions=True)
         Qt.QWidget.__init__(self)
-        self.setWindowTitle("AM Modulation")
+        self.setWindowTitle("AM Transmitter")
         qtgui.util.check_set_qss()
         try:
             self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
@@ -54,7 +54,7 @@ class AM_Modulation(gr.top_block, Qt.QWidget):
         self.top_grid_layout = Qt.QGridLayout()
         self.top_layout.addLayout(self.top_grid_layout)
 
-        self.settings = Qt.QSettings("GNU Radio", "AM_Modulation")
+        self.settings = Qt.QSettings("GNU Radio", "AM_Modulator")
 
         try:
             geometry = self.settings.value("geometry")
@@ -71,7 +71,7 @@ class AM_Modulation(gr.top_block, Qt.QWidget):
         self.transmit = transmit = 0
         self.samp_rate = samp_rate = 48000
         self.rf_gain = rf_gain = 20
-        self.mic_gain = mic_gain = 1
+        self.mic_gain = mic_gain = 5
         self.if_gain = if_gain = 20
 
         ##################################################
@@ -108,7 +108,7 @@ class AM_Modulation(gr.top_block, Qt.QWidget):
             self.tabs_grid_layout_1.setRowStretch(r, 1)
         for c in range(1, 2):
             self.tabs_grid_layout_1.setColumnStretch(c, 1)
-        self._mic_gain_range = qtgui.Range(0, 10, 1, 1, 200)
+        self._mic_gain_range = qtgui.Range(0, 10, 1, 5, 200)
         self._mic_gain_win = qtgui.RangeWidget(self._mic_gain_range, self.set_mic_gain, "Microphone Gain", "counter_slider", float, QtCore.Qt.Horizontal)
         self.tabs_grid_layout_0.addWidget(self._mic_gain_win, 0, 1, 1, 1)
         for r in range(0, 1):
@@ -116,7 +116,7 @@ class AM_Modulation(gr.top_block, Qt.QWidget):
         for c in range(1, 2):
             self.tabs_grid_layout_0.setColumnStretch(c, 1)
         self._if_gain_range = qtgui.Range(0, 30, 1, 20, 200)
-        self._if_gain_win = qtgui.RangeWidget(self._if_gain_range, self.set_if_gain, "'if_gain'", "counter_slider", float, QtCore.Qt.Horizontal)
+        self._if_gain_win = qtgui.RangeWidget(self._if_gain_range, self.set_if_gain, "IF Gain", "counter_slider", float, QtCore.Qt.Horizontal)
         self.tabs_grid_layout_1.addWidget(self._if_gain_win, 2, 1, 1, 1)
         for r in range(2, 3):
             self.tabs_grid_layout_1.setRowStretch(r, 1)
@@ -180,8 +180,8 @@ class AM_Modulation(gr.top_block, Qt.QWidget):
         for c in range(1, 2):
             self.tabs_grid_layout_0.setColumnStretch(c, 1)
         self.qtgui_grbackground_0 = None
-        if "white" != 'default':
-            bkcolor="background-color: white;"
+        if "default" != 'default':
+            bkcolor="background-color: default;"
         else:
             bkcolor=""
 
@@ -291,7 +291,7 @@ class AM_Modulation(gr.top_block, Qt.QWidget):
 
 
     def closeEvent(self, event):
-        self.settings = Qt.QSettings("GNU Radio", "AM_Modulation")
+        self.settings = Qt.QSettings("GNU Radio", "AM_Modulator")
         self.settings.setValue("geometry", self.saveGeometry())
         self.stop()
         self.wait()
@@ -358,7 +358,7 @@ class AM_Modulation(gr.top_block, Qt.QWidget):
 
 
 
-def main(top_block_cls=AM_Modulation, options=None):
+def main(top_block_cls=AM_Modulator, options=None):
 
     qapp = Qt.QApplication(sys.argv)
 
