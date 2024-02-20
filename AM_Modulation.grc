@@ -46,7 +46,7 @@ blocks:
     start: '0'
     step: '1'
     stop: '30'
-    value: '10'
+    value: '20'
     widget: counter_slider
   states:
     bus_sink: false
@@ -67,7 +67,7 @@ blocks:
     start: '0'
     step: '1'
     stop: '30'
-    value: '10'
+    value: '20'
     widget: counter_slider
   states:
     bus_sink: false
@@ -88,7 +88,7 @@ blocks:
     start: '0'
     step: '1'
     stop: '30'
-    value: '10'
+    value: '20'
     widget: counter_slider
   states:
     bus_sink: false
@@ -351,7 +351,7 @@ blocks:
     ant7: ''
     ant8: ''
     ant9: ''
-    args: '""'
+    args: '"hackrf"'
     bb_gain0: bb_gain
     bb_gain1: '20'
     bb_gain10: '20'
@@ -572,7 +572,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [760, 536.0]
+    coordinate: [760, 532.0]
     rotation: 0
     state: enabled
 - name: qtgui_freq_sink_x_0

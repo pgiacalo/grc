@@ -14,8 +14,9 @@ from PyQt5 import QtCore
 from gnuradio import analog
 from gnuradio import audio
 from gnuradio import blocks
-from gnuradio import gr
+from gnuradio import filter
 from gnuradio.filter import firdes
+from gnuradio import gr
 from gnuradio.fft import window
 import sys
 import signal
@@ -23,6 +24,8 @@ from PyQt5 import Qt
 from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
+import osmosdr
+import time
 import sip
 
 
@@ -62,22 +65,42 @@ class AM_Modulation(gr.top_block, Qt.QWidget):
         ##################################################
         # Variables
         ##################################################
+        self.tx_samp_rate = tx_samp_rate = 1.92e6
         self.samp_rate = samp_rate = 48000
-        self.rf_gain = rf_gain = 10
-        self.if_gain = if_gain = 10
-        self.bb_gain = bb_gain = 10
+        self.rf_gain = rf_gain = 20
+        self.if_gain = if_gain = 20
+        self.bb_gain = bb_gain = 20
 
         ##################################################
         # Blocks
         ##################################################
 
-        self._rf_gain_range = qtgui.Range(0, 30, 1, 10, 200)
+        self._rf_gain_range = qtgui.Range(0, 30, 1, 20, 200)
         self._rf_gain_win = qtgui.RangeWidget(self._rf_gain_range, self.set_rf_gain, "'rf_gain'", "counter_slider", float, QtCore.Qt.Horizontal)
         self.top_grid_layout.addWidget(self._rf_gain_win, 1, 1, 1, 1)
         for r in range(1, 2):
             self.top_grid_layout.setRowStretch(r, 1)
         for c in range(1, 2):
             self.top_grid_layout.setColumnStretch(c, 1)
+        self._if_gain_range = qtgui.Range(0, 30, 1, 20, 200)
+        self._if_gain_win = qtgui.RangeWidget(self._if_gain_range, self.set_if_gain, "'if_gain'", "counter_slider", float, QtCore.Qt.Horizontal)
+        self.top_grid_layout.addWidget(self._if_gain_win, 2, 1, 1, 1)
+        for r in range(2, 3):
+            self.top_grid_layout.setRowStretch(r, 1)
+        for c in range(1, 2):
+            self.top_grid_layout.setColumnStretch(c, 1)
+        self._bb_gain_range = qtgui.Range(0, 30, 1, 20, 200)
+        self._bb_gain_win = qtgui.RangeWidget(self._bb_gain_range, self.set_bb_gain, "'bb_gain'", "counter_slider", float, QtCore.Qt.Horizontal)
+        self.top_grid_layout.addWidget(self._bb_gain_win, 3, 1, 1, 1)
+        for r in range(3, 4):
+            self.top_grid_layout.setRowStretch(r, 1)
+        for c in range(1, 2):
+            self.top_grid_layout.setColumnStretch(c, 1)
+        self.rational_resampler_xxx_0 = filter.rational_resampler_ccc(
+                interpolation=(int(tx_samp_rate / samp_rate)),
+                decimation=1,
+                taps=[],
+                fractional_bw=0)
         self.qtgui_time_sink_x_0 = qtgui.time_sink_f(
             1024, #size
             samp_rate, #samp_rate
@@ -169,26 +192,26 @@ class AM_Modulation(gr.top_block, Qt.QWidget):
 
         self._qtgui_freq_sink_x_0_win = sip.wrapinstance(self.qtgui_freq_sink_x_0.qwidget(), Qt.QWidget)
         self.top_layout.addWidget(self._qtgui_freq_sink_x_0_win)
-        self._if_gain_range = qtgui.Range(0, 30, 1, 10, 200)
-        self._if_gain_win = qtgui.RangeWidget(self._if_gain_range, self.set_if_gain, "'if_gain'", "counter_slider", float, QtCore.Qt.Horizontal)
-        self.top_grid_layout.addWidget(self._if_gain_win, 2, 1, 1, 1)
-        for r in range(2, 3):
-            self.top_grid_layout.setRowStretch(r, 1)
-        for c in range(1, 2):
-            self.top_grid_layout.setColumnStretch(c, 1)
+        self.osmosdr_sink_0 = osmosdr.sink(
+            args="numchan=" + str(1) + " " + "hackrf"
+        )
+        self.osmosdr_sink_0.set_time_unknown_pps(osmosdr.time_spec_t())
+        self.osmosdr_sink_0.set_sample_rate(tx_samp_rate)
+        self.osmosdr_sink_0.set_center_freq(27.185e6, 0)
+        self.osmosdr_sink_0.set_freq_corr(0, 0)
+        self.osmosdr_sink_0.set_gain(rf_gain, 0)
+        self.osmosdr_sink_0.set_if_gain(if_gain, 0)
+        self.osmosdr_sink_0.set_bb_gain(bb_gain, 0)
+        self.osmosdr_sink_0.set_antenna('', 0)
+        self.osmosdr_sink_0.set_bandwidth(0, 0)
         self.blocks_throttle_0 = blocks.throttle(gr.sizeof_float*1, samp_rate,True)
         self.blocks_multiply_xx_0 = blocks.multiply_vff(1)
+        self.blocks_float_to_complex_0 = blocks.float_to_complex(1)
         self.blocks_divide_xx_0 = blocks.divide_ff(1)
         self.blocks_add_const_vxx_0 = blocks.add_const_ff(1)
-        self._bb_gain_range = qtgui.Range(0, 30, 1, 10, 200)
-        self._bb_gain_win = qtgui.RangeWidget(self._bb_gain_range, self.set_bb_gain, "'bb_gain'", "counter_slider", float, QtCore.Qt.Horizontal)
-        self.top_grid_layout.addWidget(self._bb_gain_win, 3, 1, 1, 1)
-        for r in range(3, 4):
-            self.top_grid_layout.setRowStretch(r, 1)
-        for c in range(1, 2):
-            self.top_grid_layout.setColumnStretch(c, 1)
         self.audio_source_0 = audio.source(samp_rate, '', True)
         self.analog_sig_source_x_1 = analog.sig_source_f(samp_rate, analog.GR_COS_WAVE, 1000, 1, 0, 0)
+        self.analog_const_source_x_1 = analog.sig_source_f(0, analog.GR_CONST_WAVE, 0, 0, 0)
         self.analog_const_source_x_0 = analog.sig_source_f(0, analog.GR_CONST_WAVE, 0, 0, 2)
 
 
@@ -196,15 +219,19 @@ class AM_Modulation(gr.top_block, Qt.QWidget):
         # Connections
         ##################################################
         self.connect((self.analog_const_source_x_0, 0), (self.blocks_divide_xx_0, 1))
+        self.connect((self.analog_const_source_x_1, 0), (self.blocks_float_to_complex_0, 1))
         self.connect((self.analog_sig_source_x_1, 0), (self.blocks_multiply_xx_0, 1))
         self.connect((self.analog_sig_source_x_1, 0), (self.qtgui_time_sink_x_0, 0))
         self.connect((self.audio_source_0, 0), (self.blocks_add_const_vxx_0, 0))
         self.connect((self.blocks_add_const_vxx_0, 0), (self.blocks_divide_xx_0, 0))
         self.connect((self.blocks_divide_xx_0, 0), (self.blocks_multiply_xx_0, 0))
         self.connect((self.blocks_divide_xx_0, 0), (self.qtgui_time_sink_x_0, 1))
+        self.connect((self.blocks_float_to_complex_0, 0), (self.rational_resampler_xxx_0, 0))
         self.connect((self.blocks_multiply_xx_0, 0), (self.blocks_throttle_0, 0))
+        self.connect((self.blocks_throttle_0, 0), (self.blocks_float_to_complex_0, 0))
         self.connect((self.blocks_throttle_0, 0), (self.qtgui_freq_sink_x_0, 0))
         self.connect((self.blocks_throttle_0, 0), (self.qtgui_time_sink_x_0, 2))
+        self.connect((self.rational_resampler_xxx_0, 0), (self.osmosdr_sink_0, 0))
 
 
     def closeEvent(self, event):
@@ -214,6 +241,13 @@ class AM_Modulation(gr.top_block, Qt.QWidget):
         self.wait()
 
         event.accept()
+
+    def get_tx_samp_rate(self):
+        return self.tx_samp_rate
+
+    def set_tx_samp_rate(self, tx_samp_rate):
+        self.tx_samp_rate = tx_samp_rate
+        self.osmosdr_sink_0.set_sample_rate(self.tx_samp_rate)
 
     def get_samp_rate(self):
         return self.samp_rate
@@ -230,18 +264,21 @@ class AM_Modulation(gr.top_block, Qt.QWidget):
 
     def set_rf_gain(self, rf_gain):
         self.rf_gain = rf_gain
+        self.osmosdr_sink_0.set_gain(self.rf_gain, 0)
 
     def get_if_gain(self):
         return self.if_gain
 
     def set_if_gain(self, if_gain):
         self.if_gain = if_gain
+        self.osmosdr_sink_0.set_if_gain(self.if_gain, 0)
 
     def get_bb_gain(self):
         return self.bb_gain
 
     def set_bb_gain(self, bb_gain):
         self.bb_gain = bb_gain
+        self.osmosdr_sink_0.set_bb_gain(self.bb_gain, 0)
 
 
 
