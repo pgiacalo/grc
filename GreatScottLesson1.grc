@@ -33,25 +33,25 @@ options:
     state: enabled
 
 blocks:
-- name: audio_gain
+- name: bb_gain
   id: variable_qtgui_range
   parameters:
     comment: ''
     gui_hint: ''
-    label: Audio Gain
+    label: BB Gain
     min_len: '200'
     orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0'
     step: '1'
-    stop: '20'
+    stop: '10'
     value: '1'
     widget: counter_slider
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1016, 52.0]
+    coordinate: [1160, 28.0]
     rotation: 0
     state: enabled
 - name: center_freq
@@ -92,6 +92,48 @@ blocks:
     coordinate: [32, 360.0]
     rotation: 0
     state: enabled
+- name: if_gain
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: IF Gain
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: '0'
+    step: '1'
+    stop: '10'
+    value: '1'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1032, 28.0]
+    rotation: 0
+    state: enabled
+- name: rf_gain
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: RF Gain
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: '13'
+    step: '1'
+    stop: '14'
+    value: '13'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [896, 28.0]
+    rotation: 0
+    state: enabled
 - name: samp_rate
   id: variable
   parameters:
@@ -123,7 +165,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [880, 52.0]
+    coordinate: [736, 28.0]
     rotation: 0
     state: enabled
 - name: analog_sig_source_x_0
@@ -139,14 +181,13 @@ blocks:
     offset: '0'
     phase: '0'
     samp_rate: samp_rate
-    showports: 'False'
     type: complex
     waveform: analog.GR_COS_WAVE
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [352, 292.0]
+    coordinate: [320, 332.0]
     rotation: 0
     state: enabled
 - name: analog_wfm_rcv_0
@@ -163,7 +204,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [976, 200.0]
+    coordinate: [1104, 212.0]
     rotation: 0
     state: enabled
 - name: audio_sink_0
@@ -180,7 +221,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1136, 356.0]
+    coordinate: [1176, 388.0]
     rotation: 0
     state: enabled
 - name: blocks_multiply_const_vxx_0
@@ -189,7 +230,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    const: audio_gain
+    const: '1'
     maxoutbuf: '0'
     minoutbuf: '0'
     type: float
@@ -198,9 +239,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1096, 260.0]
+    coordinate: [1160, 300.0]
     rotation: 0
-    state: enabled
+    state: true
 - name: blocks_multiply_xx_0
   id: blocks_multiply_xx
   parameters:
@@ -281,7 +322,7 @@ blocks:
     ant8: ''
     ant9: ''
     args: '"hackrf"'
-    bb_gain0: '20'
+    bb_gain0: bb_gain
     bb_gain1: '20'
     bb_gain10: '20'
     bb_gain11: '20'
@@ -450,7 +491,7 @@ blocks:
     freq7: 100e6
     freq8: 100e6
     freq9: 100e6
-    gain0: '0'
+    gain0: rf_gain
     gain1: '10'
     gain10: '10'
     gain11: '10'
@@ -514,7 +555,7 @@ blocks:
     gain_mode7: 'False'
     gain_mode8: 'False'
     gain_mode9: 'False'
-    if_gain0: '20'
+    if_gain0: if_gain
     if_gain1: '20'
     if_gain10: '20'
     if_gain11: '20'
@@ -597,9 +638,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [312, 108.0]
+    coordinate: [208, 20.0]
     rotation: 0
-    state: enabled
+    state: true
 - name: qtgui_freq_sink_x_0
   id: qtgui_freq_sink_x
   parameters:
@@ -678,7 +719,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [544, 100.0]
+    coordinate: [520, 92.0]
     rotation: 0
     state: enabled
 - name: qtgui_freq_sink_x_0_0
@@ -759,9 +800,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [680, 308.0]
+    coordinate: [680, 356.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: rational_resampler_xxx_0
   id: rational_resampler_xxx
   parameters:
@@ -779,7 +820,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [832, 192.0]
+    coordinate: [880, 212.0]
     rotation: 0
     state: enabled
 
@@ -796,4 +837,3 @@ connections:
 
 metadata:
   file_format: 1
-  grc_version: 3.10.9.2
