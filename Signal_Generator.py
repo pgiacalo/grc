@@ -86,6 +86,7 @@ class Signal_Generator(gr.top_block, Qt.QWidget):
         self.osmosdr_sink_0 = osmosdr.sink(
             args="numchan=" + str(1) + " " + 'hackrf=0'
         )
+        self.osmosdr_sink_0.set_clock_source('internal', 0)
         self.osmosdr_sink_0.set_time_unknown_pps(osmosdr.time_spec_t())
         self.osmosdr_sink_0.set_sample_rate(samp_rate)
         self.osmosdr_sink_0.set_center_freq(frequency, 0)

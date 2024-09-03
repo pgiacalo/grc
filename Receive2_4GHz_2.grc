@@ -11,7 +11,7 @@ options:
     gen_linking: dynamic
     generate_options: qt_gui
     hier_block_src_path: '.:'
-    id: Signal_Generator
+    id: Receive2_4_GHz
     max_nouts: '0'
     output_language: python
     placement: (0,0)
@@ -22,138 +22,79 @@ options:
     run_options: prompt
     sizing_mode: fixed
     thread_safe_setters: ''
-    title: Signal Generator
+    title: Receive2_4_GHz
     window_size: (1000,1000)
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [48, 20.0]
+    coordinate: [40, 28.0]
     rotation: 0
     state: enabled
 
 blocks:
-- name: bb_gain
+- name: center_freq
+  id: variable
+  parameters:
+    comment: 'Set the center frequency to the mid point of the band.
+
+      In the case of the FM band, this is 98MHz (the full range is 88 to 108 MHz).'
+    value: center_frequency
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [64, 200.0]
+    rotation: 0
+    state: enabled
+- name: center_frequency
   id: variable_qtgui_range
   parameters:
     comment: ''
     gui_hint: ''
-    label: BB Gain
+    label: ''
     min_len: '200'
     orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0'
-    step: '0.3'
-    stop: '47'
-    value: '0'
+    step: 10e6
+    stop: 500e6
+    value: 10e6
     widget: counter_slider
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [592, 20.0]
+    coordinate: [368, 16.0]
     rotation: 0
     state: enabled
-- name: frequency
-  id: variable_qtgui_range
+- name: channel_width
+  id: variable
   parameters:
     comment: ''
-    gui_hint: ''
-    label: Frequency
-    min_len: '200'
-    orient: QtCore.Qt.Horizontal
-    rangeType: float
-    start: 1e6
-    step: 1e6
-    stop: 400e6
     value: 20e6
-    widget: counter_slider
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [272, 20.0]
-    rotation: 0
-    state: enabled
-- name: if_gain
-  id: variable_qtgui_range
-  parameters:
-    comment: ''
-    gui_hint: ''
-    label: IF Gain
-    min_len: '200'
-    orient: QtCore.Qt.Horizontal
-    rangeType: float
-    start: '0'
-    step: '0.3'
-    stop: '47'
-    value: '0'
-    widget: counter_slider
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [496, 20.0]
-    rotation: 0
-    state: enabled
-- name: rf_gain
-  id: variable_qtgui_range
-  parameters:
-    comment: ''
-    gui_hint: ''
-    label: RF Gain
-    min_len: '200'
-    orient: QtCore.Qt.Horizontal
-    rangeType: float
-    start: '0'
-    step: '1'
-    stop: '47'
-    value: '0'
-    widget: counter_slider
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [400, 20.0]
+    coordinate: [64, 296.0]
     rotation: 0
     state: enabled
 - name: samp_rate
   id: variable
   parameters:
-    comment: ''
-    value: 10e6
+    comment: "The maximum sample rate for the HackRF = 20M samples/second. \nHowever,\
+      \ using the maximum value could bog down the CPU."
+    value: 20e6
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [56, 128.0]
+    coordinate: [64, 112.0]
     rotation: 0
     state: enabled
-- name: analog_sig_source_x_0
-  id: analog_sig_source_x
-  parameters:
-    affinity: ''
-    alias: ''
-    amp: '1'
-    comment: ''
-    freq: '1000'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    offset: '0'
-    phase: '0'
-    samp_rate: samp_rate
-    showports: 'False'
-    type: complex
-    waveform: analog.GR_COS_WAVE
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [56, 220.0]
-    rotation: 0
-    state: enabled
-- name: osmosdr_sink_0
-  id: osmosdr_sink
+- name: osmosdr_source_0
+  id: osmosdr_source
   parameters:
     affinity: ''
     alias: ''
@@ -189,8 +130,8 @@ blocks:
     ant7: ''
     ant8: ''
     ant9: ''
-    args: hackrf=0
-    bb_gain0: bb_gain
+    args: '"hackrf"'
+    bb_gain0: '10'
     bb_gain1: '20'
     bb_gain10: '20'
     bb_gain11: '20'
@@ -254,7 +195,7 @@ blocks:
     bw7: '0'
     bw8: '0'
     bw9: '0'
-    clock_source0: internal
+    clock_source0: ''
     clock_source1: ''
     clock_source2: ''
     clock_source3: ''
@@ -262,17 +203,7 @@ blocks:
     clock_source5: ''
     clock_source6: ''
     clock_source7: ''
-    comment: "These notes are found under the Osmocom block Advanced tab\n\n1) Connect\
-      \ the HackRF/Portapack to the computer via the USB port.\n2) Put a DC Block\
-      \ at the oscilloscope.\n3) Connect the antenna port of the HackRF to the oscilloscope\
-      \ \n4) Turn on the Portapack and select the HackRF option. \n5) Put a 50 ohm\
-      \ terminator at the oscilloscope.\n6) Run the script and view the waveform on\
-      \ the oscilloscope and \nusng the scope's FFT.\n\n7) To use an external clock:\n\
-      Provide a 10 MHz sine wave, 0 dBm to +17 dBm (10 dBm is best)\n-- USE A 10 dBm\
-      \ ATTENUATOR TO REDUCE GPSDO POWER --\n7a) In the Osmocom block, set MB0: Clock\
-      \ Source: External\n7b) Put a 10 dBm attenuator on the HackRF Clock Input port\n\
-      7c) Connect the GPSDO to the CLKIN port on the HackRF.\nThe CLKIN port has a\
-      \ 50 ohm impedance."
+    comment: ''
     corr0: '0'
     corr1: '0'
     corr10: '0'
@@ -305,7 +236,39 @@ blocks:
     corr7: '0'
     corr8: '0'
     corr9: '0'
-    freq0: frequency
+    dc_offset_mode0: '0'
+    dc_offset_mode1: '0'
+    dc_offset_mode10: '0'
+    dc_offset_mode11: '0'
+    dc_offset_mode12: '0'
+    dc_offset_mode13: '0'
+    dc_offset_mode14: '0'
+    dc_offset_mode15: '0'
+    dc_offset_mode16: '0'
+    dc_offset_mode17: '0'
+    dc_offset_mode18: '0'
+    dc_offset_mode19: '0'
+    dc_offset_mode2: '0'
+    dc_offset_mode20: '0'
+    dc_offset_mode21: '0'
+    dc_offset_mode22: '0'
+    dc_offset_mode23: '0'
+    dc_offset_mode24: '0'
+    dc_offset_mode25: '0'
+    dc_offset_mode26: '0'
+    dc_offset_mode27: '0'
+    dc_offset_mode28: '0'
+    dc_offset_mode29: '0'
+    dc_offset_mode3: '0'
+    dc_offset_mode30: '0'
+    dc_offset_mode31: '0'
+    dc_offset_mode4: '0'
+    dc_offset_mode5: '0'
+    dc_offset_mode6: '0'
+    dc_offset_mode7: '0'
+    dc_offset_mode8: '0'
+    dc_offset_mode9: '0'
+    freq0: center_freq
     freq1: 100e6
     freq10: 100e6
     freq11: 100e6
@@ -337,7 +300,7 @@ blocks:
     freq7: 100e6
     freq8: 100e6
     freq9: 100e6
-    gain0: rf_gain
+    gain0: '0'
     gain1: '10'
     gain10: '10'
     gain11: '10'
@@ -369,7 +332,39 @@ blocks:
     gain7: '10'
     gain8: '10'
     gain9: '10'
-    if_gain0: if_gain
+    gain_mode0: 'False'
+    gain_mode1: 'False'
+    gain_mode10: 'False'
+    gain_mode11: 'False'
+    gain_mode12: 'False'
+    gain_mode13: 'False'
+    gain_mode14: 'False'
+    gain_mode15: 'False'
+    gain_mode16: 'False'
+    gain_mode17: 'False'
+    gain_mode18: 'False'
+    gain_mode19: 'False'
+    gain_mode2: 'False'
+    gain_mode20: 'False'
+    gain_mode21: 'False'
+    gain_mode22: 'False'
+    gain_mode23: 'False'
+    gain_mode24: 'False'
+    gain_mode25: 'False'
+    gain_mode26: 'False'
+    gain_mode27: 'False'
+    gain_mode28: 'False'
+    gain_mode29: 'False'
+    gain_mode3: 'False'
+    gain_mode30: 'False'
+    gain_mode31: 'False'
+    gain_mode4: 'False'
+    gain_mode5: 'False'
+    gain_mode6: 'False'
+    gain_mode7: 'False'
+    gain_mode8: 'False'
+    gain_mode9: 'False'
+    if_gain0: '10'
     if_gain1: '20'
     if_gain10: '20'
     if_gain11: '20'
@@ -401,6 +396,38 @@ blocks:
     if_gain7: '20'
     if_gain8: '20'
     if_gain9: '20'
+    iq_balance_mode0: '0'
+    iq_balance_mode1: '0'
+    iq_balance_mode10: '0'
+    iq_balance_mode11: '0'
+    iq_balance_mode12: '0'
+    iq_balance_mode13: '0'
+    iq_balance_mode14: '0'
+    iq_balance_mode15: '0'
+    iq_balance_mode16: '0'
+    iq_balance_mode17: '0'
+    iq_balance_mode18: '0'
+    iq_balance_mode19: '0'
+    iq_balance_mode2: '0'
+    iq_balance_mode20: '0'
+    iq_balance_mode21: '0'
+    iq_balance_mode22: '0'
+    iq_balance_mode23: '0'
+    iq_balance_mode24: '0'
+    iq_balance_mode25: '0'
+    iq_balance_mode26: '0'
+    iq_balance_mode27: '0'
+    iq_balance_mode28: '0'
+    iq_balance_mode29: '0'
+    iq_balance_mode3: '0'
+    iq_balance_mode30: '0'
+    iq_balance_mode31: '0'
+    iq_balance_mode4: '0'
+    iq_balance_mode5: '0'
+    iq_balance_mode6: '0'
+    iq_balance_mode7: '0'
+    iq_balance_mode8: '0'
+    iq_balance_mode9: '0'
     maxoutbuf: '0'
     minoutbuf: '0'
     nchan: '1'
@@ -420,12 +447,93 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [296, 188.0]
+    coordinate: [360, 156.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_freq_sink_x_0
+  id: qtgui_freq_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '0.1'
+    axislabels: 'True'
+    bw: samp_rate
+    color1: '"green"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'False'
+    fc: center_freq
+    fftsize: '1024'
+    freqhalf: 'True'
+    grid: 'True'
+    gui_hint: ''
+    label: Relative Gain
+    label1: ''
+    label10: ''''''
+    label2: ''''''
+    label3: ''''''
+    label4: ''''''
+    label5: ''''''
+    label6: ''''''
+    label7: ''''''
+    label8: ''''''
+    label9: ''''''
+    legend: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '"Sink"'
+    nconnections: '1'
+    norm_window: 'False'
+    showports: 'False'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_tag: '""'
+    type: complex
+    units: dB
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    wintype: window.WIN_BLACKMAN_hARRIS
+    ymax: '10'
+    ymin: '-140'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [592, 200.0]
     rotation: 0
     state: enabled
 
 connections:
-- [analog_sig_source_x_0, '0', osmosdr_sink_0, '0']
+- [osmosdr_source_0, '0', qtgui_freq_sink_x_0, '0']
 
 metadata:
   file_format: 1

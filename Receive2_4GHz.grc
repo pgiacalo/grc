@@ -4,15 +4,14 @@ options:
     catch_exceptions: 'True'
     category: '[GRC Hier Blocks]'
     cmake_opt: ''
-    comment: "Reference from YouTube video:  \nGNU Radio Amplitude Modulation\nby\
-      \ Tall Paul Tech\nhttps://www.youtube.com/watch?v=YHND0qWgLM0&t=36s"
+    comment: ''
     copyright: ''
     description: ''
     gen_cmake: 'On'
     gen_linking: dynamic
     generate_options: qt_gui
     hier_block_src_path: '.:'
-    id: AM_Modulator
+    id: Receive2_4_GHz
     max_nouts: '0'
     output_language: python
     placement: (0,0)
@@ -23,165 +22,108 @@ options:
     run_options: prompt
     sizing_mode: fixed
     thread_safe_setters: ''
-    title: AM Transmitter
+    title: Receive2_4_GHz
     window_size: (1000,1000)
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [32, 12.0]
+    coordinate: [8, 8]
     rotation: 0
     state: enabled
 
 blocks:
-- name: if_gain
+- name: audio_gain
   id: variable_qtgui_range
   parameters:
     comment: ''
-    gui_hint: tabs@1:2, 1
-    label: IF Gain
+    gui_hint: ''
+    label: Audio Gain
     min_len: '200'
     orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0'
     step: '1'
-    stop: '30'
-    value: '20'
+    stop: '20'
+    value: '1'
     widget: counter_slider
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [760, 536.0]
+    coordinate: [1016, 52.0]
     rotation: 0
     state: enabled
-- name: mic_gain
-  id: variable_qtgui_range
+- name: center_freq
+  id: variable
   parameters:
-    comment: ''
-    gui_hint: tabs@0:0, 1,1,1
-    label: Microphone Gain
-    min_len: '200'
-    orient: QtCore.Qt.Horizontal
-    rangeType: float
-    start: '0'
-    step: '1'
-    stop: '10'
-    value: '5'
-    widget: counter_slider
+    comment: 'Set the center frequency to the mid point of the band.
+
+      In the case of the FM band, this is 98MHz (the full range is 88 to 108 MHz).'
+    value: 2440.0e6
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [312, 12.0]
+    coordinate: [32, 184.0]
     rotation: 0
     state: enabled
-- name: rf_gain
-  id: variable_qtgui_range
+- name: channel_freq
+  id: variable
   parameters:
-    comment: ''
-    gui_hint: tabs@1:1, 1
-    label: RF Gain
-    min_len: '200'
-    orient: QtCore.Qt.Horizontal
-    rangeType: float
-    start: '0'
-    step: '1'
-    stop: '30'
-    value: '20'
-    widget: counter_slider
+    comment: Set this value to the desired channel frequency.
+    value: tuning
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [672, 536.0]
+    coordinate: [32, 272.0]
+    rotation: 0
+    state: enabled
+- name: channel_width
+  id: variable
+  parameters:
+    comment: ''
+    value: 20e6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [32, 360.0]
     rotation: 0
     state: enabled
 - name: samp_rate
   id: variable
   parameters:
-    comment: ''
-    value: '48000'
+    comment: "The maximum sample rate for the HackRF = 20M samples/second. \nHowever,\
+      \ using the maximum value could bog down the CPU."
+    value: 20e6
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [200, 16.0]
+    coordinate: [32, 88.0]
     rotation: 0
     state: enabled
-- name: transmit
-  id: variable_qtgui_check_box
+- name: tuning
+  id: variable_qtgui_range
   parameters:
     comment: ''
-    'false': '0'
-    gui_hint: tabs@1:0,1
-    label: Transmit
-    'true': '1'
-    type: int
+    gui_hint: ''
+    label: Tuning
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: -40e6
+    step: 1e6
+    stop: 40e6
     value: '0'
+    widget: counter_slider
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [568, 536.0]
-    rotation: 0
-    state: enabled
-- name: tx_freq
-  id: variable
-  parameters:
-    comment: 27.185 MHz is a CB radio band
-    value: 27.185e6
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [280, 544.0]
-    rotation: 0
-    state: enabled
-- name: tx_samp_rate
-  id: variable
-  parameters:
-    comment: ''
-    value: 1.92e6
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [392, 544.0]
-    rotation: 0
-    state: enabled
-- name: analog_const_source_x_0
-  id: analog_const_source_x
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    const: '2'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    type: float
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [216, 276.0]
-    rotation: 0
-    state: enabled
-- name: analog_const_source_x_1
-  id: analog_const_source_x
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    const: '0'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    type: float
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [64, 740.0]
+    coordinate: [880, 52.0]
     rotation: 0
     state: enabled
 - name: analog_sig_source_x_0
@@ -190,76 +132,64 @@ blocks:
     affinity: ''
     alias: ''
     amp: '1'
-    comment: Baseband
-    freq: '100'
+    comment: ''
+    freq: center_freq - channel_freq
     maxoutbuf: '0'
     minoutbuf: '0'
     offset: '0'
     phase: '0'
     samp_rate: samp_rate
     showports: 'False'
-    type: float
+    type: complex
     waveform: analog.GR_COS_WAVE
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [32, 204.0]
+    coordinate: [352, 292.0]
+    rotation: 0
+    state: enabled
+- name: analog_wfm_rcv_0
+  id: analog_wfm_rcv
+  parameters:
+    affinity: ''
+    alias: ''
+    audio_decimation: '10'
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    quad_rate: 480e3
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [976, 200.0]
     rotation: 0
     state: disabled
-- name: analog_sig_source_x_1
-  id: analog_sig_source_x
+- name: audio_sink_0
+  id: audio_sink
   parameters:
     affinity: ''
     alias: ''
-    amp: '1'
-    comment: Carrier
-    freq: '1000'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    offset: '0'
-    phase: '0'
-    samp_rate: samp_rate
-    showports: 'False'
-    type: float
-    waveform: analog.GR_COS_WAVE
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [32, 340.0]
-    rotation: 0
-    state: enabled
-- name: audio_source_0
-  id: audio_source
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: Local Microphone
+    comment: ''
     device_name: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    num_outputs: '1'
+    num_inputs: '1'
     ok_to_block: 'True'
-    samp_rate: samp_rate
+    samp_rate: '48000'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [56, 124.0]
+    coordinate: [1136, 356.0]
     rotation: 0
-    state: enabled
-- name: blocks_add_const_vxx_0
-  id: blocks_add_const_vxx
+    state: disabled
+- name: blocks_multiply_const_vxx_0
+  id: blocks_multiply_const_vxx
   parameters:
     affinity: ''
     alias: ''
-    comment: "We add 1 to the baseband signal so that the resulting values are always\
-      \ positive (between zero and 2). \nThis yeilds a multiply result that maintains\
-      \ the phase of the AM modulated output. \nOtherwise, the phase would shift /\
-      \ invert with every cycle of the baseband signal.\nWe don't want the phase to\
-      \ shift."
-    const: '1'
+    comment: ''
+    const: audio_gain
     maxoutbuf: '0'
     minoutbuf: '0'
     type: float
@@ -268,141 +198,53 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [312, 124.0]
+    coordinate: [1096, 260.0]
     rotation: 0
-    state: enabled
-- name: blocks_divide_xx_0
-  id: blocks_divide_xx
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: Divide by 2 so the resulting Baseband signal is between zero and one
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    num_inputs: '2'
-    type: float
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [384, 244.0]
-    rotation: 0
-    state: enabled
-- name: blocks_float_to_complex_0
-  id: blocks_float_to_complex
+    state: disabled
+- name: blocks_multiply_xx_0
+  id: blocks_multiply_xx
   parameters:
     affinity: ''
     alias: ''
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [232, 684.0]
-    rotation: 0
-    state: enabled
-- name: blocks_multiply_const_vxx_0
-  id: blocks_multiply_const_vxx
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: Mic gain
-    const: mic_gain
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    type: float
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [184, 124.0]
-    rotation: 0
-    state: enabled
-- name: blocks_multiply_const_vxx_1
-  id: blocks_multiply_const_vxx
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: This is just a switch to enable transmitting, if the Transmit checkbox
-      is checked.
-    const: transmit
-    maxoutbuf: '0'
-    minoutbuf: '0'
+    num_inputs: '2'
     type: complex
     vlen: '1'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [568, 700.0]
+    coordinate: [544, 236.0]
     rotation: 0
     state: enabled
-- name: blocks_multiply_const_vxx_1_0
-  id: blocks_multiply_const_vxx
+- name: low_pass_filter_0
+  id: low_pass_filter
   parameters:
     affinity: ''
     alias: ''
-    comment: This is just a switch to enable the frequency spectrum display, when
-      the Transmit checkbox is checked.
-    const: transmit
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    type: float
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [776, 364.0]
-    rotation: 0
-    state: enabled
-- name: blocks_multiply_xx_0
-  id: blocks_multiply_xx
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: 'Modulated Result: Multiplying the carrier and baseband yields an AM
-      modulated signal.'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    num_inputs: '2'
-    type: float
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [480, 348.0]
-    rotation: 0
-    state: enabled
-- name: blocks_throttle2_0
-  id: blocks_throttle2
-  parameters:
-    affinity: ''
-    alias: ''
+    beta: '6.76'
     comment: ''
-    ignoretag: 'True'
-    limit: auto
-    maximum: '0.1'
+    cutoff_freq: 75e3
+    decim: int(samp_rate/channel_width)
+    gain: '1'
+    interp: '1'
     maxoutbuf: '0'
     minoutbuf: '0'
-    samples_per_second: samp_rate
-    type: float
-    vlen: '1'
+    samp_rate: samp_rate
+    type: fir_filter_ccf
+    width: 25e3
+    win: window.WIN_HAMMING
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [616, 360.0]
+    coordinate: [680, 176.0]
     rotation: 0
-    state: enabled
-- name: osmosdr_sink_0
-  id: osmosdr_sink
+    state: disabled
+- name: osmosdr_source_0
+  id: osmosdr_source
   parameters:
     affinity: ''
     alias: ''
@@ -439,7 +281,7 @@ blocks:
     ant8: ''
     ant9: ''
     args: '"hackrf"'
-    bb_gain0: '0'
+    bb_gain0: '20'
     bb_gain1: '20'
     bb_gain10: '20'
     bb_gain11: '20'
@@ -544,7 +386,39 @@ blocks:
     corr7: '0'
     corr8: '0'
     corr9: '0'
-    freq0: tx_freq
+    dc_offset_mode0: '0'
+    dc_offset_mode1: '0'
+    dc_offset_mode10: '0'
+    dc_offset_mode11: '0'
+    dc_offset_mode12: '0'
+    dc_offset_mode13: '0'
+    dc_offset_mode14: '0'
+    dc_offset_mode15: '0'
+    dc_offset_mode16: '0'
+    dc_offset_mode17: '0'
+    dc_offset_mode18: '0'
+    dc_offset_mode19: '0'
+    dc_offset_mode2: '0'
+    dc_offset_mode20: '0'
+    dc_offset_mode21: '0'
+    dc_offset_mode22: '0'
+    dc_offset_mode23: '0'
+    dc_offset_mode24: '0'
+    dc_offset_mode25: '0'
+    dc_offset_mode26: '0'
+    dc_offset_mode27: '0'
+    dc_offset_mode28: '0'
+    dc_offset_mode29: '0'
+    dc_offset_mode3: '0'
+    dc_offset_mode30: '0'
+    dc_offset_mode31: '0'
+    dc_offset_mode4: '0'
+    dc_offset_mode5: '0'
+    dc_offset_mode6: '0'
+    dc_offset_mode7: '0'
+    dc_offset_mode8: '0'
+    dc_offset_mode9: '0'
+    freq0: center_freq
     freq1: 100e6
     freq10: 100e6
     freq11: 100e6
@@ -576,7 +450,7 @@ blocks:
     freq7: 100e6
     freq8: 100e6
     freq9: 100e6
-    gain0: rf_gain * transmit
+    gain0: '0'
     gain1: '10'
     gain10: '10'
     gain11: '10'
@@ -608,7 +482,39 @@ blocks:
     gain7: '10'
     gain8: '10'
     gain9: '10'
-    if_gain0: if_gain * transmit
+    gain_mode0: 'False'
+    gain_mode1: 'False'
+    gain_mode10: 'False'
+    gain_mode11: 'False'
+    gain_mode12: 'False'
+    gain_mode13: 'False'
+    gain_mode14: 'False'
+    gain_mode15: 'False'
+    gain_mode16: 'False'
+    gain_mode17: 'False'
+    gain_mode18: 'False'
+    gain_mode19: 'False'
+    gain_mode2: 'False'
+    gain_mode20: 'False'
+    gain_mode21: 'False'
+    gain_mode22: 'False'
+    gain_mode23: 'False'
+    gain_mode24: 'False'
+    gain_mode25: 'False'
+    gain_mode26: 'False'
+    gain_mode27: 'False'
+    gain_mode28: 'False'
+    gain_mode29: 'False'
+    gain_mode3: 'False'
+    gain_mode30: 'False'
+    gain_mode31: 'False'
+    gain_mode4: 'False'
+    gain_mode5: 'False'
+    gain_mode6: 'False'
+    gain_mode7: 'False'
+    gain_mode8: 'False'
+    gain_mode9: 'False'
+    if_gain0: '20'
     if_gain1: '20'
     if_gain10: '20'
     if_gain11: '20'
@@ -640,11 +546,43 @@ blocks:
     if_gain7: '20'
     if_gain8: '20'
     if_gain9: '20'
+    iq_balance_mode0: '0'
+    iq_balance_mode1: '0'
+    iq_balance_mode10: '0'
+    iq_balance_mode11: '0'
+    iq_balance_mode12: '0'
+    iq_balance_mode13: '0'
+    iq_balance_mode14: '0'
+    iq_balance_mode15: '0'
+    iq_balance_mode16: '0'
+    iq_balance_mode17: '0'
+    iq_balance_mode18: '0'
+    iq_balance_mode19: '0'
+    iq_balance_mode2: '0'
+    iq_balance_mode20: '0'
+    iq_balance_mode21: '0'
+    iq_balance_mode22: '0'
+    iq_balance_mode23: '0'
+    iq_balance_mode24: '0'
+    iq_balance_mode25: '0'
+    iq_balance_mode26: '0'
+    iq_balance_mode27: '0'
+    iq_balance_mode28: '0'
+    iq_balance_mode29: '0'
+    iq_balance_mode3: '0'
+    iq_balance_mode30: '0'
+    iq_balance_mode31: '0'
+    iq_balance_mode4: '0'
+    iq_balance_mode5: '0'
+    iq_balance_mode6: '0'
+    iq_balance_mode7: '0'
+    iq_balance_mode8: '0'
+    iq_balance_mode9: '0'
     maxoutbuf: '0'
     minoutbuf: '0'
     nchan: '1'
     num_mboards: '1'
-    sample_rate: tx_samp_rate
+    sample_rate: samp_rate
     sync: sync
     time_source0: ''
     time_source1: ''
@@ -659,7 +597,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [760, 644.0]
+    coordinate: [312, 108.0]
     rotation: 0
     state: enabled
 - name: qtgui_freq_sink_x_0
@@ -678,10 +616,10 @@ blocks:
     alpha8: '1.0'
     alpha9: '1.0'
     autoscale: 'False'
-    average: '1.0'
+    average: '0.1'
     axislabels: 'True'
     bw: samp_rate
-    color1: '"blue"'
+    color1: '"green"'
     color10: '"dark blue"'
     color2: '"red"'
     color3: '"green"'
@@ -692,12 +630,12 @@ blocks:
     color8: '"dark red"'
     color9: '"dark green"'
     comment: ''
-    ctrlpanel: 'True'
-    fc: tx_freq
+    ctrlpanel: 'False'
+    fc: center_freq
     fftsize: '1024'
     freqhalf: 'True'
-    grid: 'False'
-    gui_hint: tabs@1:3, 1
+    grid: 'True'
+    gui_hint: ''
     label: Relative Gain
     label1: ''
     label10: ''''''
@@ -712,7 +650,7 @@ blocks:
     legend: 'True'
     maxoutbuf: '0'
     minoutbuf: '0'
-    name: '""'
+    name: '"Sink One"'
     nconnections: '1'
     norm_window: 'False'
     showports: 'False'
@@ -720,9 +658,9 @@ blocks:
     tr_level: '0.0'
     tr_mode: qtgui.TRIG_MODE_FREE
     tr_tag: '""'
-    type: float
+    type: complex
     units: dB
-    update_time: '0.01'
+    update_time: '0.10'
     width1: '1'
     width10: '1'
     width2: '1'
@@ -740,26 +678,11 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [944, 332.0]
+    coordinate: [544, 100.0]
     rotation: 0
     state: enabled
-- name: qtgui_grbackground_0
-  id: qtgui_grbackground
-  parameters:
-    alias: ''
-    alignment: center
-    comment: ''
-    file: ''
-    relBackgroundColor: default
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [648, 32.0]
-    rotation: 0
-    state: enabled
-- name: qtgui_time_sink_x_0
-  id: qtgui_time_sink_x
+- name: qtgui_freq_sink_x_0_0
+  id: qtgui_freq_sink_x
   parameters:
     affinity: ''
     alias: ''
@@ -774,66 +697,51 @@ blocks:
     alpha8: '1.0'
     alpha9: '1.0'
     autoscale: 'False'
+    average: '0.05'
     axislabels: 'True'
-    color1: blue
-    color10: dark blue
-    color2: red
-    color3: green
-    color4: black
-    color5: cyan
-    color6: magenta
-    color7: yellow
-    color8: dark red
-    color9: dark green
+    bw: samp_rate
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
     comment: ''
-    ctrlpanel: 'True'
-    entags: 'True'
-    grid: 'False'
-    gui_hint: tabs@0:2, 1
-    label1: Carrier
-    label10: Signal 10
-    label2: Baseband
-    label3: Modulated
-    label4: Signal 4
-    label5: Signal 5
-    label6: Signal 6
-    label7: Signal 7
-    label8: Signal 8
-    label9: Signal 9
+    ctrlpanel: 'False'
+    fc: center_freq
+    fftsize: '1024'
+    freqhalf: 'True'
+    grid: 'True'
+    gui_hint: ''
+    label: Relative Gain
+    label1: ''
+    label10: ''''''
+    label2: ''''''
+    label3: ''''''
+    label4: ''''''
+    label5: ''''''
+    label6: ''''''
+    label7: ''''''
+    label8: ''''''
+    label9: ''''''
     legend: 'True'
-    marker1: '-1'
-    marker10: '-1'
-    marker2: '-1'
-    marker3: '-1'
-    marker4: '-1'
-    marker5: '-1'
-    marker6: '-1'
-    marker7: '-1'
-    marker8: '-1'
-    marker9: '-1'
-    name: '""'
-    nconnections: '3'
-    size: '1024'
-    srate: samp_rate
-    stemplot: 'False'
-    style1: '1'
-    style10: '1'
-    style2: '1'
-    style3: '1'
-    style4: '1'
-    style5: '1'
-    style6: '1'
-    style7: '1'
-    style8: '1'
-    style9: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '"Sink Two"'
+    nconnections: '1'
+    norm_window: 'False'
+    showports: 'False'
     tr_chan: '0'
-    tr_delay: '0'
     tr_level: '0.0'
     tr_mode: qtgui.TRIG_MODE_FREE
-    tr_slope: qtgui.TRIG_SLOPE_POS
     tr_tag: '""'
-    type: float
-    update_time: '0.01'
+    type: complex
+    units: dB
+    update_time: '0.10'
     width1: '1'
     width10: '1'
     width2: '1'
@@ -844,15 +752,14 @@ blocks:
     width7: '1'
     width8: '1'
     width9: '1'
-    ylabel: Amplitude
-    ymax: '1'
-    ymin: '-1'
-    yunit: '""'
+    wintype: window.WIN_FLATTOP
+    ymax: '10'
+    ymin: '-140'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [776, 228.0]
+    coordinate: [680, 428.0]
     rotation: 0
     state: enabled
 - name: rational_resampler_xxx_0
@@ -861,9 +768,9 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    decim: '1'
+    decim: '5'
     fbw: '0'
-    interp: int(tx_samp_rate / samp_rate)
+    interp: '12'
     maxoutbuf: '0'
     minoutbuf: '0'
     taps: '[]'
@@ -872,90 +779,20 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [392, 688.0]
+    coordinate: [832, 192.0]
     rotation: 0
-    state: enabled
-- name: tabs
-  id: qtgui_tab_widget
-  parameters:
-    alias: ''
-    comment: ''
-    gui_hint: ''
-    label0: Audio
-    label1: RF
-    label10: Tab 10
-    label11: Tab 11
-    label12: Tab 12
-    label13: Tab 13
-    label14: Tab 14
-    label15: Tab 15
-    label16: Tab 16
-    label17: Tab 17
-    label18: Tab 18
-    label19: Tab 19
-    label2: Tab 2
-    label3: Tab 3
-    label4: Tab 4
-    label5: Tab 5
-    label6: Tab 6
-    label7: Tab 7
-    label8: Tab 8
-    label9: Tab 9
-    num_tabs: '2'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [480, 28.0]
-    rotation: 0
-    state: enabled
-- name: virtual_sink_0
-  id: virtual_sink
-  parameters:
-    alias: ''
-    comment: ''
-    stream_id: To_Transmitter
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [776, 444.0]
-    rotation: 0
-    state: enabled
-- name: virtual_source_0
-  id: virtual_source
-  parameters:
-    alias: ''
-    comment: ''
-    stream_id: To_Transmitter
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [56, 660.0]
-    rotation: 0
-    state: enabled
+    state: disabled
 
 connections:
-- [analog_const_source_x_0, '0', blocks_divide_xx_0, '1']
-- [analog_const_source_x_1, '0', blocks_float_to_complex_0, '1']
-- [analog_sig_source_x_0, '0', blocks_add_const_vxx_0, '0']
-- [analog_sig_source_x_1, '0', blocks_multiply_xx_0, '1']
-- [analog_sig_source_x_1, '0', qtgui_time_sink_x_0, '0']
-- [audio_source_0, '0', blocks_multiply_const_vxx_0, '0']
-- [blocks_add_const_vxx_0, '0', blocks_divide_xx_0, '0']
-- [blocks_divide_xx_0, '0', blocks_multiply_xx_0, '0']
-- [blocks_divide_xx_0, '0', qtgui_time_sink_x_0, '1']
-- [blocks_float_to_complex_0, '0', rational_resampler_xxx_0, '0']
-- [blocks_multiply_const_vxx_0, '0', blocks_add_const_vxx_0, '0']
-- [blocks_multiply_const_vxx_1, '0', osmosdr_sink_0, '0']
-- [blocks_multiply_const_vxx_1_0, '0', qtgui_freq_sink_x_0, '0']
-- [blocks_multiply_xx_0, '0', blocks_throttle2_0, '0']
-- [blocks_throttle2_0, '0', blocks_multiply_const_vxx_1_0, '0']
-- [blocks_throttle2_0, '0', qtgui_time_sink_x_0, '2']
-- [blocks_throttle2_0, '0', virtual_sink_0, '0']
-- [rational_resampler_xxx_0, '0', blocks_multiply_const_vxx_1, '0']
-- [virtual_source_0, '0', blocks_float_to_complex_0, '0']
+- [analog_sig_source_x_0, '0', blocks_multiply_xx_0, '1']
+- [analog_wfm_rcv_0, '0', blocks_multiply_const_vxx_0, '0']
+- [blocks_multiply_const_vxx_0, '0', audio_sink_0, '0']
+- [blocks_multiply_xx_0, '0', low_pass_filter_0, '0']
+- [blocks_multiply_xx_0, '0', qtgui_freq_sink_x_0_0, '0']
+- [low_pass_filter_0, '0', rational_resampler_xxx_0, '0']
+- [osmosdr_source_0, '0', blocks_multiply_xx_0, '0']
+- [osmosdr_source_0, '0', qtgui_freq_sink_x_0, '0']
+- [rational_resampler_xxx_0, '0', analog_wfm_rcv_0, '0']
 
 metadata:
   file_format: 1

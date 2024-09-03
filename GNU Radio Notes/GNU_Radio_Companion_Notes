@@ -18,6 +18,8 @@ I also needed to install xterm, in order to run/execute gnu radio companion proj
 
 
 Launch gnuradio-companion from the command line, as follows
+	> grc 				(alias to gnuradio-companion)
+	--- OR ---
 	> gnuradio 			(alias to gnuradio-companion)
 	--- OR ---
 	> gnuradio-companion

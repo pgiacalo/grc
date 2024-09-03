@@ -67,7 +67,7 @@ class AM_Modulator(gr.top_block, Qt.QWidget):
         # Variables
         ##################################################
         self.tx_samp_rate = tx_samp_rate = 1.92e6
-        self.tx_freq = tx_freq = 27.185e6
+        self.tx_freq = tx_freq = 920e6
         self.transmit = transmit = 0
         self.samp_rate = samp_rate = 48000
         self.rf_gain = rf_gain = 20
@@ -254,7 +254,7 @@ class AM_Modulator(gr.top_block, Qt.QWidget):
         self.osmosdr_sink_0.set_bb_gain(0, 0)
         self.osmosdr_sink_0.set_antenna('', 0)
         self.osmosdr_sink_0.set_bandwidth(0, 0)
-        self.blocks_throttle_0 = blocks.throttle(gr.sizeof_float*1, samp_rate,True)
+        self.blocks_throttle2_0 = blocks.throttle( gr.sizeof_float*1, samp_rate, True, 0 if "auto" == "auto" else max( int(float(0.1) * samp_rate) if "auto" == "time" else int(0.1), 1) )
         self.blocks_multiply_xx_0 = blocks.multiply_vff(1)
         self.blocks_multiply_const_vxx_1_0 = blocks.multiply_const_ff(transmit)
         self.blocks_multiply_const_vxx_1 = blocks.multiply_const_cc(transmit)
@@ -283,10 +283,10 @@ class AM_Modulator(gr.top_block, Qt.QWidget):
         self.connect((self.blocks_multiply_const_vxx_0, 0), (self.blocks_add_const_vxx_0, 0))
         self.connect((self.blocks_multiply_const_vxx_1, 0), (self.osmosdr_sink_0, 0))
         self.connect((self.blocks_multiply_const_vxx_1_0, 0), (self.qtgui_freq_sink_x_0, 0))
-        self.connect((self.blocks_multiply_xx_0, 0), (self.blocks_throttle_0, 0))
-        self.connect((self.blocks_throttle_0, 0), (self.blocks_float_to_complex_0, 0))
-        self.connect((self.blocks_throttle_0, 0), (self.blocks_multiply_const_vxx_1_0, 0))
-        self.connect((self.blocks_throttle_0, 0), (self.qtgui_time_sink_x_0, 2))
+        self.connect((self.blocks_multiply_xx_0, 0), (self.blocks_throttle2_0, 0))
+        self.connect((self.blocks_throttle2_0, 0), (self.blocks_float_to_complex_0, 0))
+        self.connect((self.blocks_throttle2_0, 0), (self.blocks_multiply_const_vxx_1_0, 0))
+        self.connect((self.blocks_throttle2_0, 0), (self.qtgui_time_sink_x_0, 2))
         self.connect((self.rational_resampler_xxx_0, 0), (self.blocks_multiply_const_vxx_1, 0))
 
 
@@ -330,7 +330,7 @@ class AM_Modulator(gr.top_block, Qt.QWidget):
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
         self.analog_sig_source_x_1.set_sampling_freq(self.samp_rate)
-        self.blocks_throttle_0.set_sample_rate(self.samp_rate)
+        self.blocks_throttle2_0.set_sample_rate(self.samp_rate)
         self.qtgui_freq_sink_x_0.set_frequency_range(self.tx_freq, self.samp_rate)
         self.qtgui_time_sink_x_0.set_samp_rate(self.samp_rate)
 

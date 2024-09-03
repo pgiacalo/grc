@@ -11,7 +11,7 @@ options:
     gen_linking: dynamic
     generate_options: qt_gui
     hier_block_src_path: '.:'
-    id: untitled
+    id: GreatScottLesson1
     max_nouts: '0'
     output_language: python
     placement: (0,0)
@@ -22,7 +22,7 @@ options:
     run_options: prompt
     sizing_mode: fixed
     thread_safe_setters: ''
-    title: Not titled yet
+    title: GreatScottLesson1
     window_size: (1000,1000)
   states:
     bus_sink: false
@@ -33,25 +33,25 @@ options:
     state: enabled
 
 blocks:
-- name: audio_gain
+- name: bb_gain
   id: variable_qtgui_range
   parameters:
     comment: ''
     gui_hint: ''
-    label: Audio Gain
+    label: bb_gain
     min_len: '200'
     orient: QtCore.Qt.Horizontal
     rangeType: float
     start: '0'
     step: '1'
     stop: '20'
-    value: '1'
+    value: '10'
     widget: counter_slider
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1016, 52.0]
+    coordinate: [1032, 44.0]
     rotation: 0
     state: enabled
 - name: center_freq
@@ -92,6 +92,69 @@ blocks:
     coordinate: [32, 360.0]
     rotation: 0
     state: enabled
+- name: if_gain
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: if_gain
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: '0'
+    step: '1'
+    stop: '20'
+    value: '1'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [952, 44.0]
+    rotation: 0
+    state: enabled
+- name: output_gain
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: output_gain
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: '0'
+    step: '1'
+    stop: '20'
+    value: '1'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1152, 44.0]
+    rotation: 0
+    state: enabled
+- name: rf_gain
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: rf_gain
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: '0'
+    step: '1'
+    stop: '20'
+    value: '1'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [864, 44.0]
+    rotation: 0
+    state: enabled
 - name: samp_rate
   id: variable
   parameters:
@@ -123,7 +186,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [880, 52.0]
+    coordinate: [728, 44.0]
     rotation: 0
     state: enabled
 - name: analog_sig_source_x_0
@@ -189,7 +252,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    const: audio_gain
+    const: output_gain
     maxoutbuf: '0'
     minoutbuf: '0'
     type: float
@@ -281,7 +344,7 @@ blocks:
     ant8: ''
     ant9: ''
     args: '"hackrf"'
-    bb_gain0: '20'
+    bb_gain0: bb_gain
     bb_gain1: '20'
     bb_gain10: '20'
     bb_gain11: '20'
@@ -450,7 +513,7 @@ blocks:
     freq7: 100e6
     freq8: 100e6
     freq9: 100e6
-    gain0: '0'
+    gain0: rf_gain
     gain1: '10'
     gain10: '10'
     gain11: '10'
@@ -514,7 +577,7 @@ blocks:
     gain_mode7: 'False'
     gain_mode8: 'False'
     gain_mode9: 'False'
-    if_gain0: '20'
+    if_gain0: if_gain
     if_gain1: '20'
     if_gain10: '20'
     if_gain11: '20'
@@ -761,7 +824,7 @@ blocks:
     bus_structure: null
     coordinate: [680, 308.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: rational_resampler_xxx_0
   id: rational_resampler_xxx
   parameters:
